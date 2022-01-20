@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int maxProduct(int arr[], int n)
+{
+    if (n < 3)
+        return -1;
+
+    vector<int> leftMin(n, -1);
+    vector<int> rightMin(n, -1);
+    vector<int> leftMax(n, -1);
+    vector<int> rightMax(n, -1);
+
+    int max_product = INT_MIN;
+
+    int max_sum = arr[0];
+
+    int min_sum = arr[0];
+
+    for (int i = 1; i < n; i++)
+    {
+        leftMax[i] = max_sum;
+        if (arr[i] > max_sum)
+            max_sum = arr[i];
+
+        leftMin[i] = min_sum;
+        if (arr[i] < min_sum)
+            min_sum = arr[i];
+    }
+
+    max_sum = arr[n - 1];
+
+    min_sum = arr[n - 1];
+    
+    for (int j = n - 2; j >= 0; j--)
+    {
+        rightMax[j] = max_sum;
+        if (arr[j] > max_sum)
+            max_sum = arr[j];
+
+        rightMin[j] = min_sum;
+        if (arr[j] < min_sum)
+            min_sum = arr[j];
+    }
+
+    
+    for (int i = 1; i < n - 1; i++)
+    {
+        int max1 = max(arr[i] * leftMax[i] * rightMax[i],
+                    arr[i] * leftMin[i] * rightMin[i]);
+
+        int max2 = max(arr[i] * leftMax[i] * rightMin[i],
+                    arr[i] * leftMin[i] * rightMax[i]);
+
+        max_product = max(max_product, max(max1, max2));
+    }
+
+    return max_product;
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int n;
+    cin>>n;
+    int arr[n];
+    
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    
+    cout<<maxProduct(arr,n);
+    
+    return 0;
+}
